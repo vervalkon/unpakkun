@@ -1,10 +1,8 @@
+import argparse
 import os
 import struct
 
 CHECKSUMADR = 0xFFDC
-
-outputpath = "./out/"
-rompath = "/Users/whatever/ROMS/BS Sutte Hakkun (J).smc"
 
 sums = {
     0x0349: {
@@ -121,22 +119,29 @@ def getHeaders(address, amount):
     return headers
 
 
-# the main code
-with open(rompath, "rb") as rom:
-    # get checksum for correct version so the right addresses can be fetched
-    lib = getCheckSum(CHECKSUMADR)
+if __name__ == "__main__":
 
-    oname = outputpath + lib["name"] + "/"
-    mdir(oname)
+    parser = argparse.ArgumentParser(description="A file decompressor/dumper for Sutte Hakkun (all versions)")
+    parser.add_argument("rom_path", help="Path to ROM")
+    parser.add_argument("-o", dest="output_dir", help="Output directory", default="out")
+    args = parser.parse_args()
 
-    huff_adr, header_adr, header_amo = lib["huffroot"], lib["headerroot"], lib["headeramount"]
+    with open(args.rom_path, "rb") as rom:
+        # get checksum for correct version so the right addresses can be fetched
+        lib = getCheckSum(CHECKSUMADR)
 
-    tree = getTree(huff_adr)
-    headers = getHeaders(header_adr, header_amo)
+        odir = os.path.join(args.output_dir, lib["name"])
+        mdir(odir)
 
-    for e, header in enumerate(headers):
-        data = decompress(header, tree)
-        with open(oname + "{:04X}.smc".format(e), "wb") as ofile:
-            ofile.write(data)
+        huff_adr, header_adr, header_amo = lib["huffroot"], lib["headerroot"], lib["headeramount"]
 
-    print("All done")
+        tree = getTree(huff_adr)
+        headers = getHeaders(header_adr, header_amo)
+
+        for e, header in enumerate(headers):
+            oname = os.path.join(odir, "{:04X}.smc".format(e))
+            data = decompress(header, tree)
+            with open(oname, "wb") as ofile:
+                ofile.write(data)
+
+        print("All done")
