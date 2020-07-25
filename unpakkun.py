@@ -57,7 +57,7 @@ def getTree(address):
     return HUFFZERO, huff_dict
 
 
-def decompress(entry, hufftree):
+def decompress(id, entry, hufftree):
     outputbuffer = bytearray()
     rom.seek(entry["pc_adr"])
 
@@ -82,10 +82,10 @@ def decompress(entry, hufftree):
                     zero = dest
             if done:
                 break
-        print("${:04X} at ${:06X}\tDecompress done\t({:04X}/{:04X})".format(e, entry["pc_adr"], entry["comp_size"], entry["dec_size"]))
+        print("${:04X} at ${:06X}\tDecompress done\t({:04X}/{:04X})".format(id, entry["pc_adr"], entry["comp_size"], entry["dec_size"]))
     else:
         outputbuffer = rom.read(entry["dec_size"])
-        print("${:04X} at ${:06X}\tExtraction done\t({:04X}/{:04X})".format(e, entry["pc_adr"], entry["comp_size"], entry["dec_size"]))
+        print("${:04X} at ${:06X}\tExtraction done\t({:04X}/{:04X})".format(id, entry["pc_adr"], entry["comp_size"], entry["dec_size"]))
     return outputbuffer
 
 
@@ -120,7 +120,8 @@ def getHeaders(address, amount):
     return headers
 
 
-if __name__ == "__main__":
+def main():
+    global rom
 
     parser = argparse.ArgumentParser(description="A file decompressor/dumper for Sutte Hakkun (all versions)")
     parser.add_argument("rom_path", help="Path to ROM")
@@ -144,8 +145,12 @@ if __name__ == "__main__":
 
         for e, header in enumerate(headers):
             oname = os.path.join(odir, "{:04X}.smc".format(e))
-            data = decompress(header, tree)
+            data = decompress(e, header, tree)
             with open(oname, "wb") as ofile:
                 ofile.write(data)
 
         print("All done")
+
+
+if __name__ == "__main__":
+    main()
