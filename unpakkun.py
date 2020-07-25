@@ -1,6 +1,7 @@
 import argparse
 import os
 import struct
+import sys
 
 CHECKSUMADR = 0xFFDC
 
@@ -96,7 +97,7 @@ def getCheckSum(address):
         print("Checksum OK.\nYour version is: '{:s}'".format(adrs["name"]))
         return adrs
     else:
-        print("Unknown checksum ({:04X}).\nPlease verify that your ROM is a headerless known dump of Sutte Hakkun, any version will do.".format(checksum))
+        print("Unknown checksum ({:04X})".format(checksum))
 
 
 def snes2pc(addr):
@@ -129,6 +130,9 @@ if __name__ == "__main__":
     with open(args.rom_path, "rb") as rom:
         # get checksum for correct version so the right addresses can be fetched
         lib = getCheckSum(CHECKSUMADR)
+        if lib is None:
+            print("Please verify that your ROM is a headerless known dump of Sutte Hakkun, any version will do.")
+            sys.exit(1)
 
         odir = os.path.join(args.output_dir, lib["name"])
         mdir(odir)
