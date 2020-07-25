@@ -1,5 +1,5 @@
+import os
 import struct
-import os, sys
 
 CHECKSUMADR = 0xFFDC
 
@@ -53,9 +53,9 @@ def getTree(address):
     rom.seek(address)
     HUFFAMO, HUFFZERO = struct.unpack("HH", rom.read(4))
     huff_dict = []
-    for i in range(0, HUFFAMO):
+    for i in range(HUFFAMO):
         huff_dict.append(struct.unpack("xxHH", rom.read(6)))
-    return [HUFFZERO, huff_dict]
+    return HUFFZERO, huff_dict
 
 
 def decompress(entry, hufftree):
@@ -63,16 +63,14 @@ def decompress(entry, hufftree):
     rom.seek(entry["pc_adr"])
 
     if entry["compressed_flag"]:
-        zero = hufftree[0]
-        tree = hufftree[1]
+        zero, tree = hufftree
 
         done = False
         while True:
             mb = getB()
-            mask = [int(bit) for bit in list(bin(mb)[2:].zfill(8))]
+            mask = [int(bit) for bit in format(mb, '08b')]
 
-            while len(mask) > 0:
-                step = mask.pop(0)
+            for step in mask:
                 dest = tree[zero][step]
                 if tree[dest][0] == 0xFFFF:
                     outbyte = dest
@@ -92,35 +90,34 @@ def decompress(entry, hufftree):
     return outputbuffer
 
 
-def getCheckSum(adress):
-    rom.seek(adress)
+def getCheckSum(address):
+    rom.seek(address)
     checksum = getB(2)
-    try:
+    if checksum in sums:
         adrs = sums[checksum]
         print("Checksum OK.\nYour version is: '{:s}'".format(adrs["name"]))
         return adrs
-    except KeyError:
+    else:
         print("Unknown checksum ({:04X}).\nPlease verify that your ROM is a headerless known dump of Sutte Hakkun, any version will do.".format(checksum))
-        return
 
 
 def snes2pc(addr):
     return addr - 0xC00000
 
 
-def getHeaders(adress, amount):
-    rom.seek(adress)
-    headers = {}
-    for h in range(0, amount):
-        headers[h] = {
+def getHeaders(address, amount):
+    rom.seek(address)
+    headers = []
+    for _ in range(amount):
+        header = {
             "snes_adr": getB(4),
             "dec_size": getB(2),
             "comp_size": getB(2),
             "compressed_flag": getB(2),
             "pad": getB(6)
         }
-        headers[h]["pc_adr"] = snes2pc(headers[h]["snes_adr"])
-
+        header["pc_adr"] = snes2pc(header["snes_adr"])
+        headers.append(header)
     return headers
 
 
@@ -137,9 +134,9 @@ with open(rompath, "rb") as rom:
     tree = getTree(huff_adr)
     headers = getHeaders(header_adr, header_amo)
 
-    for e in headers:
-        data = decompress(headers[e], tree)
-        ofile = open(oname + "{:04X}.smc".format(e), "wb")
-        ofile.write(data)
-        ofile.close()
+    for e, header in enumerate(headers):
+        data = decompress(header, tree)
+        with open(oname + "{:04X}.smc".format(e), "wb") as ofile:
+            ofile.write(data)
+
     print("All done")
