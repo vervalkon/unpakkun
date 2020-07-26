@@ -52,7 +52,7 @@ def getTree(address):
     rom.seek(address)
     HUFFAMO, HUFFZERO = struct.unpack("HH", rom.read(4))
     huff_dict = []
-    for i in range(HUFFAMO):
+    for _ in range(HUFFAMO):
         huff_dict.append(struct.unpack("xxHH", rom.read(6)))
     return HUFFZERO, huff_dict
 
