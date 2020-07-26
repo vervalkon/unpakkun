@@ -64,24 +64,20 @@ def decompress(id, entry, hufftree):
     if entry["compressed_flag"]:
         zero, tree = hufftree
 
-        done = False
-        while True:
-            mb = getB()
-            mask = [int(bit) for bit in format(mb, '08b')]
+        pos = zero
+        mask = []
+        while len(outputbuffer) < entry["dec_size"]:
+            if not mask:
+                mb = getB()
+                mask = [int(bit) for bit in format(mb, '08b')]
+            while mask:
+                step = mask.pop(0)
+                pos = tree[pos][step]
+                if tree[pos][0] == 0xFFFF:
+                    outputbuffer.append(pos)
+                    pos = zero
+                    break
 
-            for step in mask:
-                dest = tree[zero][step]
-                if tree[dest][0] == 0xFFFF:
-                    outbyte = dest
-                    outputbuffer.append(outbyte)
-                    zero = hufftree[0]
-                    if len(outputbuffer) == entry["dec_size"]:
-                        done = True
-                        break
-                else:
-                    zero = dest
-            if done:
-                break
         print("${:04X} at ${:06X}\tDecompress done\t({:04X}/{:04X})".format(id, entry["pc_adr"], entry["comp_size"], entry["dec_size"]))
     else:
         outputbuffer = rom.read(entry["dec_size"])
