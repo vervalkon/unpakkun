@@ -2,7 +2,7 @@
 A file decompressor/dumper for Sutte Hakkun (all versions)
 
 ## a few things to know
-* You _must_ edit the `outputpath` and `rompath` variables on rows `6` and  `7` before running the script
+* ~~You _must_ edit the `outputpath` and `rompath` variables on rows `6` and  `7` before running the script~~
 * Will refuse to work if you recalculated the ROM checksum yourself after hacking
 * Never tested on a non-macOS environment
 * Not tested for all edge cases so who knows what kind of problems there might be
