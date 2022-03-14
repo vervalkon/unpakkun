@@ -10,7 +10,7 @@ A file decompressor/dumper for Sutte Hakkun (all versions)
 ## faq
 1. why are there two versions of `BS Sutte Hakkun 2`? Isn't the other one just a bad dump?
    * no, the other version they broadcast was actually a legitimate bugfix. There are level changes and the huffman tree and TOC are different.
-2. why can't you run it straight from the command line with arguments and options and all that jazz?
-   * i don't know how to program that
+~~2. why can't you run it straight from the command line with arguments and options and all that jazz?~~
+   * ~~i don't know how to program that~~
 3. how to recompress?
    * see above
