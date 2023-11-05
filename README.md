@@ -14,3 +14,5 @@ A file decompressor/dumper for Sutte Hakkun (all versions)
    * ~~i don't know how to program that~~
 3. how to recompress?
    * see above
+4. which file is which?
+   * see https://pastebin.com/VgdLb0wT
