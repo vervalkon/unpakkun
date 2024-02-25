@@ -1,0 +1,428 @@
+WIP Sutte Hakkun (NP) ROM map for @sstorm0 by @vervalkon. Pasted 5th of November 2023. Creation date 5th of July 2020.
+
+000000 - 00F8E1 Unknown, likely code but also some interesting arrays.
+00F8E2 - 00FDFF empty (FF)
+00FFB0 - 00FFDF Header
+
+00FFE0 : FFFFFFFF	Native unused
+00FFE4 : $FFFF		Native COP
+00FFE6 : $FE00		Native BRK
+00FFE8 : $FE00		Native ABORT
+00FFEA : $FE7D		Native NMI
+00FFEC : $FE00		Native unused
+00FFEE : $FEA0		Native IRQ
+00FFF0 : FFFFFFFF	Emulation unused
+00FFF4 : $FFFF		Emulation COP
+00FFF6 : $FFFF		Emulation unused
+00FFF8 : $FFFF		Emulation ABORT
+00FFFA : $FE7D		Emulation NMI
+00FFFC : $FE00		Emulation RESET
+00FFFE : $FEA0		Emulation IRQ/BRK
+
+010000 - 01DF04 ASM
+01DF05 - 01FFFF empty (FF)
+
+020000 - 0273E7 ASM
+0273E8 - 02FFFF empty (FF)
+
+030000 - 030BFD Huffman tree (see huffer.py)
+030BFE - 034A9D TOC (Contains address, size if decompressed, size if compressed, flag _if_ the data is compressed and padding)
+034A9E - 035415 TODO
+035416 - 036015 Array. $C0 entries, $10 bytes each. Tilemap stuff! Pause menus, HUD stuff, etc. 
+036016 - 0336ED TODO
+
+0361B2 - 0361BD: Three pointers to animated palettes, below:
+0361BE - 03632F the animated palettes. FFFF acts as terminator (last palette not pointed to by the pointers above?)
+036330 - 036351 Hakkun's Hut code related
+036352 - 036361: Hakkun's Hut level global stuff:
+FGBGgfx  unused   BGtlmap  2bppg    NAKc     CREspr   BGPAL    OBJPAL
+01A3     FFFF     01A4     03BA     03D8     0166     01A5     01A6
+
+036362 - 036491: Hakkun's Hut level headers. Words are file indexes.
+0349     034A     036A     FFFF
+030D     030E     034C     FFFF
+030F     0310     034D     FFFF
+0311     0312     034E     FFFF
+0313     0314     034F     FFFF
+0315     0316     0350     FFFF
+0317     0318     0351     FFFF
+0319     031A     0352     FFFF
+031B     031C     0353     FFFF
+031D     031E     0354     FFFF
+031F     0320     0355     FFFF
+0321     0322     0356     FFFF
+0323     0324     0357     FFFF
+0325     0326     0358     FFFF
+0327     0328     0359     FFFF
+0329     032A     035A     FFFF
+032B     032C     035B     FFFF
+032D     032E     035C     FFFF
+032F     0330     035D     FFFF
+0331     0332     035E     FFFF
+0333     0334     035F     FFFF
+0335     0336     0360     FFFF
+0337     0338     0361     FFFF
+0339     033A     0362     FFFF
+033B     033C     0363     FFFF
+033D     033E     0364     FFFF
+033F     0340     0365     FFFF
+0341     0342     0366     FFFF
+0343     0344     0367     FFFF
+0345     0346     0368     FFFF
+0347     0348     0369     FFFF
+FFFF     FFFF     FFFF     FFFF
+FFFF     FFFF     FFFF     FFFF
+FFFF     FFFF     FFFF     FFFF
+FFFF     FFFF     FFFF     FFFF
+FFFF     FFFF     FFFF     FFFF
+0349     034A     036A     FFFF
+FFFF     FFFF     FFFF     FFFF
+
+036492 - 0364C5: $D pointers to these (0364C6 - 036517):
+$00C364C6 -> FFFF
+$00C364C8 -> FFFF FFFF
+$00C364CC -> 0000 0001 0002 0003 0004
+$00C364D6 -> 0005 0006 0007
+$00C364DC -> 0008 0009 000A 000B
+$00C364E4 -> 000C 000D
+$00C364E8 -> 000E 000F 0010 0011 0012 0013 0014
+$00C364F6 -> 0015 0016
+$00C364FA -> 0017 0018
+$00C364FE -> 0019 001A 001B 001C
+$00C36506 -> 001D 001E
+$00C3650A -> 001F 0020 0021 0022 0023
+$00C36514 -> 0024 0018
+036518 - 0365F7 $7 entries, $20 bytes each. Positional data for "PRACTICE", "Sample Play" etc. stuff in tutorials.
+0365F8 - 03661F $5 entries, $8 bytes each. Positional data for Pause menus in tutorial stages.
+036620 - 03664F $C entries, $4 bytes each. Related to pause menu stuff in tutorial stages.
+036650 - 0366CF $4 entries, $20 bytes each. Positional data to whatever is above.
+0366D0 - 0366ED $F entries, 2 bytes each. ???
+0366EE - 036C0D Function pointers(!). $52 entries, $10 bytes each. Three pointers and a terminator per entry. All pointers lead to legit asm.
+036C0E - 036CCD World headers. two pointers (CRE-indexes, ) and padding:
+ CREIDXES LVLHDRS  padding..........
+$00C36CCE 00C36D2E FFFFFFFF FFFFFFFF World 1
+$00C36CD6 00C36D56 FFFFFFFF FFFFFFFF World 2
+$00C36CDE 00C36D7E FFFFFFFF FFFFFFFF World 3
+$00C36CE6 00C36DA6 FFFFFFFF FFFFFFFF World 4
+$00C36CEE 00C36DCE FFFFFFFF FFFFFFFF World 5
+$00C36CF6 00C36DF6 FFFFFFFF FFFFFFFF World 6
+$00C36CFE 00C36E1E FFFFFFFF FFFFFFFF World 7
+$00C36D06 00C36E46 FFFFFFFF FFFFFFFF World 8
+$00C36D0E 00C36E6E FFFFFFFF FFFFFFFF World 9
+$00C36D16 00C36E96 FFFFFFFF FFFFFFFF World 10
+$00C36D1E 00C36EC6 FFFFFFFF FFFFFFFF World EX
+$00C36D26 00C36EEE FFFFFFFF FFFFFFFF Makkun world
+
+036CCE - 036D2D $C entries, $8 bytes each. Per-world CRE indexes (notable file indexes are 3BA and 166, used by pause screen etc. and general sprites.)
+Pointed to by the arrays above.
+unknw 2bppg NAKc CREspr
+0002  03BA  03D8  0166
+0002  03BA  03D8  0166
+0002  03BA  03D8  0166
+0003  03BA  03D8  0166
+0003  03BA  03D8  0166
+0003  03BA  03D8  0166
+0004  03BA  03D8  0166
+0004  03BA  03D8  0166
+0004  03BA  03D8  0166
+0005  03BA  03D8  0166
+0005  03BA  03D8  0166
+0002  03BA  03D8  0166
+
+036D2E - 0378E1:	Pointers first, then level headers. Words are file indexes, VRAMinfo not figured out but sets up bg tilemap size etc. {
+ Pointer    VRAMinfoPtr  FGgfx    BGgfx    FGtilmap BGtilmap BGPAL    SPRPAL   physmap  Solution  comment
+$C36F16 --> 00C3789E     0167     0168     01A7     0169     016A     0184     01A8     0293      Stage 1-1
+$C36F2A --> 00C3789E     0167     0168     01A9     0169     016A     016B     01AA     0294      Stage 1-2
+$C36F3E --> 00C3789E     0167     0168     01AB     0169     016A     016B     01AC     0295      Stage 1-3
+$C36F52 --> 00C3789E     0167     0168     01AD     0169     016A     016B     01AE     0296      Stage 1-4
+$C36F66 --> 00C3789E     0167     0168     01AF     0169     016A     016B     01B0     0297      Stage 1-5
+$C36F7A --> 00C3789E     0167     0168     01B1     0169     016A     016B     01B2     0298      Stage 1-6
+$C36F8E --> 00C3789E     0167     0168     01B3     0169     016A     016B     01B4     0299      Stage 1-7
+$C36FA2 --> 00C3789E     0167     0168     01B5     0169     016A     016B     01B6     029A      Stage 1-8
+$C36FB6 --> 00C3789E     0167     0168     01B7     0169     016A     016B     01B8     029B      Stage 1-9
+$C36FCA --> 00C3789E     0167     0168     01B9     0169     016A     016B     01BA     029C      Stage 1-10
+
+$C36FDE --> 00C3789E     016C     016D     01BB     016E     016F     0170     01BC     029D      Stage 2-1
+$C36FF2 --> 00C3789E     016C     016D     01BD     016E     016F     0170     01BE     029E      Stage 2-2
+$C37006 --> 00C3789E     016C     016D     01BF     016E     016F     0170     01C0     029F      Stage 2-3
+$C3701A --> 00C3789E     016C     016D     01C1     016E     016F     0170     01C2     02A0      Stage 2-4
+$C3702E --> 00C3789E     016C     016D     01C3     016E     016F     0170     01C4     02A1      Stage 2-5
+$C37042 --> 00C3789E     016C     016D     01C5     016E     016F     0170     01C6     02A2      Stage 2-6
+$C37056 --> 00C3789E     016C     016D     01C7     016E     016F     0170     01C8     02A3      Stage 2-7
+$C3706A --> 00C3789E     016C     016D     01C9     016E     016F     0170     01CA     02A4      Stage 2-8
+$C3707E --> 00C3789E     016C     016D     01CB     016E     016F     0170     01CC     02A5      Stage 2-9
+$C37092 --> 00C3789E     016C     016D     01CD     016E     016F     0170     01CE     02A6      Stage 2-10
+
+$C370A6 --> 00C3789E     0171     0172     01CF     0173     0174     0175     01D0     02A7      Stage 3-1
+$C370BA --> 00C3789E     0171     0172     01D1     0173     0174     0175     01D2     02A8      Stage 3-2
+$C370CE --> 00C3789E     0171     0172     01D3     0173     0174     0175     01D4     02A9      Stage 3-3
+$C370E2 --> 00C3789E     0171     0172     01D5     0173     0174     0175     01D6     02AA      Stage 3-4
+$C370F6 --> 00C3789E     0171     0172     01D7     0173     0174     0175     01D8     02AB      Stage 3-5
+$C3710A --> 00C3789E     0171     0172     01D9     0173     0174     0175     01DA     02AC      Stage 3-6
+$C3711E --> 00C3789E     0171     0172     01DB     0173     0174     0175     01DC     02AD      Stage 3-7
+$C37132 --> 00C3789E     0171     0172     01DD     0173     0174     0175     01DE     02AE      Stage 3-8
+$C37146 --> 00C3789E     0171     0172     01DF     0173     0174     0175     01E0     02AF      Stage 3-9
+$C3715A --> 00C3789E     0171     0172     01E1     0173     0174     0175     01E2     02B0      Stage 3-10
+
+$C3716E --> 00C3789E     0176     0177     01E3     0178     0179     017A     01E4     02B1      Stage 4-1
+$C37182 --> 00C3789E     0176     0177     01E5     0178     0179     017A     01E6     02B2      Stage 4-2
+$C37196 --> 00C3789E     0176     0177     01E7     0178     0179     017A     01E8     02B3      Stage 4-3
+$C371AA --> 00C3789E     0176     0177     01E9     0178     0179     017A     01EA     02B4      Stage 4-4
+$C371BE --> 00C3789E     0176     0177     01EB     0178     0179     017A     01EC     02B5      Stage 4-5
+$C371D2 --> 00C3789E     0176     0177     01ED     0178     0179     017A     01EE     02B6      Stage 4-6
+$C371E6 --> 00C3789E     0176     0177     01EF     0178     0179     017A     01F0     02B7      Stage 4-7
+$C371FA --> 00C3789E     0176     0177     01F1     0178     0179     017A     01F2     02B8      Stage 4-8
+$C3720E --> 00C3789E     0176     0177     01F3     0178     0179     017A     01F4     02B9      Stage 4-9
+$C37222 --> 00C3789E     0176     0177     01F5     0178     0179     017A     01F6     02BA      Stage 4-10
+
+$C37236 --> 00C3789E     017B     017C     01F7     017D     017E     017F     01F8     02BB      Stage 5-1
+$C3724A --> 00C3789E     017B     017C     01F9     017D     017E     017F     01FA     02BC      Stage 5-2
+$C3725E --> 00C3789E     017B     017C     01FB     017D     017E     017F     01FC     02BD      Stage 5-3
+$C37272 --> 00C3789E     017B     017C     01FD     017D     017E     017F     01FE     02BE      Stage 5-4
+$C37286 --> 00C3789E     017B     017C     01FF     017D     017E     017F     0200     02BF      Stage 5-5
+$C3729A --> 00C3789E     017B     017C     0201     017D     017E     017F     0202     02C0      Stage 5-6
+$C372AE --> 00C3789E     017B     017C     0203     017D     017E     017F     0204     02C1      Stage 5-7
+$C372C2 --> 00C3789E     017B     017C     0205     017D     017E     017F     0206     02C2      Stage 5-8
+$C372D6 --> 00C3789E     017B     017C     0207     017D     017E     017F     0208     02C3      Stage 5-9
+$C372EA --> 00C3789E     017B     017C     0209     017D     017E     017F     020A     02C4      Stage 5-10
+
+$C372FE --> 00C3789E     0180     0181     020B     0182     0183     0184     020C     02C5      Stage 6-1
+$C37312 --> 00C3789E     0180     0181     020D     0182     0183     0184     020E     02C6      Stage 6-2
+$C37326 --> 00C3789E     0180     0181     020F     0182     0183     0184     0210     02C7      Stage 6-3
+$C3733A --> 00C3789E     0180     0181     0211     0182     0183     0184     0212     02C8      Stage 6-4
+$C3734E --> 00C3789E     0180     0181     0213     0182     0183     0184     0214     02C9      Stage 6-5
+$C37362 --> 00C3789E     0180     0181     0215     0182     0183     0184     0216     02CA      Stage 6-6
+$C37376 --> 00C3789E     0180     0181     0217     0182     0183     0184     0218     02CB      Stage 6-7
+$C3738A --> 00C3789E     0180     0181     0219     0182     0183     0184     021A     02CC      Stage 6-8
+$C3739E --> 00C3789E     0180     0181     021B     0182     0183     0184     021C     02CD      Stage 6-9
+$C373B2 --> 00C3789E     0180     0181     021D     0182     0183     0184     021E     02CE      Stage 6-10
+
+$C373C6 --> 00C3789E     0185     0186     021F     0187     0188     0189     0220     02CF      Stage 7-1
+$C373DA --> 00C3789E     0185     0186     0221     0187     0188     0189     0222     02D0      Stage 7-2
+$C373EE --> 00C3789E     0185     0186     0223     0187     0188     0189     0224     02D1      Stage 7-3
+$C37402 --> 00C3789E     0185     0186     0225     0187     0188     0189     0226     02D2      Stage 7-4
+$C37416 --> 00C3789E     0185     0186     0227     0187     0188     0189     0228     02D3      Stage 7-5
+$C3742A --> 00C3789E     0185     0186     0229     0187     0188     0189     022A     02D4      Stage 7-6
+$C3743E --> 00C3789E     0185     0186     022B     0187     0188     0189     022C     02D5      Stage 7-7
+$C37452 --> 00C3789E     0185     0186     022D     0187     0188     0189     022E     02D6      Stage 7-8
+$C37466 --> 00C3789E     0185     0186     022F     0187     0188     0189     0230     02D7      Stage 7-9
+$C3747A --> 00C3789E     0185     0186     0231     0187     0188     0189     0232     02D8      Stage 7-10
+
+$C3748E --> 00C3789E     018A     018B     0233     018C     018D     018E     0234     02D9      Stage 8-1
+$C374A2 --> 00C3789E     018A     018B     0235     018C     018D     018E     0236     02DA      Stage 8-2
+$C374B6 --> 00C3789E     018A     018B     0237     018C     018D     018E     0238     02DB      Stage 8-3
+$C374CA --> 00C3789E     018A     018B     0239     018C     018D     018E     023A     02DC      Stage 8-4
+$C374DE --> 00C3789E     018A     018B     023B     018C     018D     018E     023C     02DD      Stage 8-5
+$C374F2 --> 00C3789E     018A     018B     023D     018C     018D     018E     023E     02DE      Stage 8-6
+$C37506 --> 00C3789E     018A     018B     023F     018C     018D     018E     0240     02DF      Stage 8-7
+$C3751A --> 00C3789E     018A     018B     0241     018C     018D     018E     0242     02E0      Stage 8-8
+$C3752E --> 00C3789E     018A     018B     0243     018C     018D     018E     0244     02E1      Stage 8-9
+$C37542 --> 00C3789E     018A     018B     0245     018C     018D     018E     0246     02E2      Stage 8-10
+
+$C37556 --> 00C3789E     018F     0190     0247     0191     0192     0193     0248     02E3      Stage 9-1
+$C3756A --> 00C3789E     018F     0190     0249     0191     0192     0193     024A     02E4      Stage 9-2
+$C3757E --> 00C3789E     018F     0190     024B     0191     0192     0193     024C     02E5      Stage 9-3
+$C37592 --> 00C3789E     018F     0190     024D     0191     0192     0193     024E     02E6      Stage 9-4
+$C375A6 --> 00C3789E     018F     0190     024F     0191     0192     0193     0250     02E7      Stage 9-5
+$C375BA --> 00C3789E     018F     0190     0251     0191     0192     0193     0252     02E8      Stage 9-6
+$C375CE --> 00C3789E     018F     0190     0253     0191     0192     0193     0254     02E9      Stage 9-7
+$C375E2 --> 00C3789E     018F     0190     0255     0191     0192     0193     0256     02EA      Stage 9-8
+$C375F6 --> 00C3789E     018F     0190     0257     0191     0192     0193     0258     02EB      Stage 9-9
+$C3760A --> 00C3789E     018F     0190     0259     0191     0192     0193     025A     02EC      Stage 9-10
+
+$C3761E --> 00C3789E     0194     0195     025B     0196     0197     0198     025C     02ED      Stage 10-1
+$C37632 --> 00C3789E     0194     0195     025D     0196     0197     0198     025E     02EE      Stage 10-2
+$C37646 --> 00C3789E     0194     0195     025F     0196     0197     0198     0260     02EF      Stage 10-3
+$C3765A --> 00C3789E     0194     0195     0261     0196     0197     0198     0262     02F0      Stage 10-4
+$C3766E --> 00C3789E     0194     0195     0263     0196     0197     0198     0264     02F1      Stage 10-5
+$C37682 --> 00C3789E     0194     0195     0265     0196     0197     0198     0266     02F2      Stage 10-6
+$C37696 --> 00C3789E     0194     0195     0267     0196     0197     0198     0268     02F3      Stage 10-7
+$C376AA --> 00C3789E     0194     0195     0269     0196     0197     0198     026A     02F4      Stage 10-8
+$C376BE --> 00C3789E     0194     0195     026B     0196     0197     0198     026C     02F5      Stage 10-9
+$C376D2 --> 00C3789E     0194     0195     026D     0196     0197     0198     026E     02F6      Stage 10-10
+
+$C376E6 --> 00C3789E     0167     0168     03E3     0169     016A     016B     03E4     FFFF      Unused! 1-1 lookalike?
+$C376FA --> 00C3789E     0167     0168     03E3     0169     016A     016B     03E4     FFFF      Unused! 1-1 lookalike?
+
+$C3770E --> 00C3789E     0199     019A     026F     019B     019C     019D     0270     FFFF      Stage EX-1
+$C37722 --> 00C3789E     0199     019A     0271     019B     019C     019D     0272     FFFF      Stage EX-2
+$C37736 --> 00C3789E     0199     019A     0273     019B     019C     019D     0274     FFFF      Stage EX-3
+$C3774A --> 00C3789E     0199     019A     0275     019B     019C     019D     0276     FFFF      Stage EX-4
+$C3775E --> 00C3789E     0199     019A     0277     019B     019C     019D     0278     FFFF      Stage EX-5
+$C37772 --> 00C3789E     0199     019A     0279     019B     019C     019D     027A     FFFF      Stage EX-6
+$C37786 --> 00C3789E     0199     019A     027B     019B     019C     019D     027C     FFFF      Stage EX-7
+$C3779A --> 00C3789E     0199     019A     027D     019B     019C     019D     027E     FFFF      Stage EX-8
+$C377AE --> 00C3789E     0199     019A     027F     019B     019C     019D     0280     FFFF      Stage EX-9
+$C377C2 --> 00C3789E     0199     019A     0281     019B     019C     019D     0282     FFFF      Stage EX-10
+
+$C377D6 --> 00C3789E     019E     019F     02F7     01A0     01A1     01A2     02F8     FFFF      Makkun Battle 1
+$C377EA --> 00C378C0     019E     019F     02F9     01A0     01A1     01A2     02FA     FFFF      Makkun Battle 2
+$C377FE --> 00C378C0     019E     019F     02FB     01A0     01A1     01A2     02FC     FFFF      Makkun Battle 3
+$C37812 --> 00C378C0     019E     019F     02FD     01A0     01A1     01A2     02FE     FFFF      Makkun Battle 4
+$C37826 --> 00C378C0     019E     019F     02FF     01A0     01A1     01A2     0300     FFFF      Makkun Battle 5
+$C3783A --> 00C378C0     019E     019F     0301     01A0     01A1     01A2     0302     FFFF      Makkun Battle 6
+$C3784E --> 00C378C0     019E     019F     0303     01A0     01A1     01A2     0304     FFFF      Makkun Battle 7
+$C37862 --> 00C378C0     019E     019F     0305     01A0     01A1     01A2     0306     FFFF      Makkun Battle 8
+$C37876 --> 00C378C0     019E     019F     0307     01A0     01A1     01A2     0308     FFFF      Makkun Battle 9
+$C3788A --> 00C378C0     019E     019F     0309     01A0     01A1     01A2     030A     FFFF      Makkun Battle 10
+
+The VRAM stuff:
+09 17 07 00 00 00 00 00 20 71 79 6C 53 02 00 50 00 78 04 00 00 30 00 70 04 00 00 20 00 6C 00 00 00 00
+09 17 07 00 00 00 00 00 20 68 73 6C 35 02 00 30 00 70 05 00 00 50 00 68 00 00 00 20 00 6C 00 00 00 00
+}
+
+0378E2 - 03790F unknown
+037910 - 03794B TODO Title screen stuff? File indexes call for stuff like Nintendo Gfx, palettes, tilemaps...
+03794C - 0379A3 TODO Pause tilemap stuff?
+0379A4 - 037B17 TODO HUD tilemap stuff?
+037B18 - 037C63 TODO point limit tables
+037C64 - 037C83 TODO weird filler?
+037C84 - 038113 Level name stuff (1-1, EX-2, etc...)
+038114 - 03814D TODO weird filler?
+03814E - 038175 Pointers to level info lists;
+00C38176, 00C381C6, 00C38216, 00C38266, 00C382B6, 00C38306, 00C38356, 00C383A6, 00C383F6, 00C38446
+
+038176 - 038495 Level info list. Needs reserach but determines in which island and in which spot the stages reside:
+isle indx stge ....
+0000 0001 0000 FFFF
+0000 0001 0001 FFFF
+0000 0001 0002 FFFF
+0000 0001 0003 FFFF
+0000 0001 0004 FFFF
+0000 0001 0005 FFFF
+0000 0001 0006 FFFF
+0000 0001 0007 FFFF
+0000 0001 0008 FFFF
+0000 0001 0009 FFFF
+0000 0002 0000 FFFF
+0000 0002 0001 FFFF
+0000 0002 0002 FFFF
+0000 0002 0003 FFFF
+0000 0002 0004 FFFF
+0000 0002 0005 FFFF
+0000 0002 0006 FFFF
+0000 0002 0007 FFFF
+0000 0002 0008 FFFF
+0000 0002 0009 FFFF
+0000 0003 0000 FFFF
+0000 0003 0001 FFFF
+0000 0003 0002 FFFF
+0000 0003 0003 FFFF
+0000 0003 0004 FFFF
+0000 0003 0005 FFFF
+0000 0003 0006 FFFF
+0000 0003 0007 FFFF
+0000 0003 0008 FFFF
+0000 0003 0009 FFFF
+0001 0001 0000 FFFF
+0001 0001 0001 FFFF
+0001 0001 0002 FFFF
+0001 0001 0003 FFFF
+0001 0001 0004 FFFF
+0001 0001 0005 FFFF
+0001 0001 0006 FFFF
+0001 0001 0007 FFFF
+0001 0001 0008 FFFF
+0001 0001 0009 FFFF
+0001 0002 0000 FFFF
+0001 0002 0001 FFFF
+0001 0002 0002 FFFF
+0001 0002 0003 FFFF
+0001 0002 0004 FFFF
+0001 0002 0005 FFFF
+0001 0002 0006 FFFF
+0001 0002 0007 FFFF
+0001 0002 0008 FFFF
+0001 0002 0009 FFFF
+0001 0003 0000 FFFF
+0001 0003 0001 FFFF
+0001 0003 0002 FFFF
+0001 0003 0003 FFFF
+0001 0003 0004 FFFF
+0001 0003 0005 FFFF
+0001 0003 0006 FFFF
+0001 0003 0007 FFFF
+0001 0003 0008 FFFF
+0001 0003 0009 FFFF
+0002 0000 0000 FFFF
+0002 0000 0001 FFFF
+0002 0000 0002 FFFF
+0002 0000 0003 FFFF
+0002 0000 0004 FFFF
+0002 0000 0005 FFFF
+0002 0000 0006 FFFF
+0002 0000 0007 FFFF
+0002 0000 0008 FFFF
+0002 0000 0009 FFFF
+0002 0001 0000 FFFF
+0002 0001 0001 FFFF
+0002 0001 0002 FFFF
+0002 0001 0003 FFFF
+0002 0001 0004 FFFF
+0002 0001 0005 FFFF
+0002 0001 0006 FFFF
+0002 0001 0007 FFFF
+0002 0001 0008 FFFF
+0002 0001 0009 FFFF
+0002 0002 0000 FFFF
+0002 0002 0001 FFFF
+0002 0002 0002 FFFF
+0002 0002 0003 FFFF
+0002 0002 0004 FFFF
+0002 0002 0005 FFFF
+0002 0002 0006 FFFF
+0002 0002 0007 FFFF
+0002 0002 0008 FFFF
+0002 0002 0009 FFFF
+0002 0003 0000 FFFF
+0002 0003 0001 FFFF
+0002 0003 0002 FFFF
+0002 0003 0003 FFFF
+0002 0003 0004 FFFF
+0002 0003 0005 FFFF
+0002 0003 0006 FFFF
+0002 0003 0007 FFFF
+0002 0003 0008 FFFF
+0002 0003 0009 FFFF
+
+038496 - 038605 TODO
+038606 - 0386C7 Title screen sprite type/placement info. $C entries, $10 bytes per entry. FFFF is terminator.
+
+03DC88 - 03FFFF empty (FF)
+
+040000 - 040046 Pointer-ish things related to map screen overlays.
+040048 - 0443AF Large arrays, related to map screen overlays(?).
+0443B0 - 044977 Clear flag stuff(?) Corrupting sets Battle Stages to non-cleared, among other things.
+044978 - 046724 Default SRAM (not sure about endpoint or structure but it's defo sram)
+046725 - 046B67 Sound Test code?
+046B68 - 046F77 Sound Test data array, $41 entries, $10 bytes each.
+046F78 - 0470D5 weird filler
+0470D6 - 0490D5 Credits roll tilemap
+0490D6 - 0491E9 ASM pointers etc
+0491EA - 04924B > 04B376 - 04B38F OAM data! Pointers are later.
+04B390 - 04C0EF Sprite headers. $D6 entries, $10 bytes each. Pointers point to data below;
+04C0F0 - 04D3E5 Sprites. 6 bytes per piece, terminator unknown(?). Stuff like title screen sprites...
+04D3E6 - 04ED65 OAM data headers. $220 entries, 0xC bytes each. Stuff like Hakkun, Makkun etc. See a few rows above.
+04ED66 - 04ED79 odd filler.
+04ED7A - 04FFFF empty (FF)
+
+050000 - 057FFF 2bpp font stuff
+058000 - 05B8BF strings/tilemaps
+05B8A0 - 05BECD Tutorial dialogbox structure
+05BECE - 05C365 Tutorial dialogbox data
+05C366 - 05C622 2bpp ABYX graphics and some tile info i guess
+05C623 - 05FFFF empty (FF)
+
+060000 - 07FFFF CRE gfx
+
+080000 - 08C555 SPC data
+08C556 - 08FFFF empty (FF)
+
+090000 - 09C45A ?
+09C45B - 09FFFF empty (FF)
+
+0A0000 - 0A4F57 very similar to one above
+0A4F58 - 0AFFFF empty (FF)
+
+0B0000 - 290C73 Data pointed to from the TOC
+290C74 - 2FFFFF empty (FF) (that's a lot of empty space......)
