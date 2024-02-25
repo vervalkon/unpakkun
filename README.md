@@ -15,4 +15,4 @@ A file decompressor/dumper for Sutte Hakkun (all versions)
 3. how to recompress?
    * see above
 4. which file is which?
-   * see https://pastebin.com/VgdLb0wT
+   * see ROMMAP.txt
